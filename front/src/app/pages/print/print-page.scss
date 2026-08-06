@@ -116,8 +116,13 @@ h2 {
   color: var(--color-text);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(:disabled) {
   border-color: var(--color-primary);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 .seed-hint {
@@ -129,6 +134,80 @@ h2 {
 
 .seed-hint code {
   font-size: 0.8em;
+}
+
+.detail-panel {
+  border-left: 4px solid var(--color-primary);
+}
+
+.banner-warn {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  color: #f57f17;
+  line-height: 1.45;
+  font-size: 0.95rem;
+}
+
+.detail-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem 1rem;
+  margin: 0 0 1rem;
+}
+
+.detail-meta div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.detail-meta dt {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.detail-meta dd {
+  margin: 0;
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+.products-title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.products-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.products-table th,
+.products-table td {
+  padding: 0.5rem 0.65rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.products-table th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--color-muted);
+  background: var(--color-surface-alt);
 }
 
 .badge {
