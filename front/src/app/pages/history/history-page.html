@@ -1,0 +1,108 @@
+<section class="panel">
+  <h1>Historial de impresiones</h1>
+  <p class="lead">
+    Auditoría de impresiones y reimpresiones. Filtra por LPN, zona o resultado.
+  </p>
+
+  <form class="filters-form" [formGroup]="filtersForm" (ngSubmit)="load()">
+    <div class="form-grid">
+      <label class="field">
+        <span>LPN</span>
+        <input type="text" formControlName="lpn" autocomplete="off" placeholder="LPN-000987654" />
+      </label>
+
+      <label class="field">
+        <span>Zona</span>
+        <input type="text" formControlName="zone" autocomplete="off" placeholder="ZONA-PICKING-A" />
+      </label>
+
+      <label class="field">
+        <span>Resultado</span>
+        <select formControlName="result">
+          <option value="">Todos</option>
+          <option value="EXITOSO">EXITOSO</option>
+          <option value="RECHAZADO">RECHAZADO</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn-primary" [disabled]="loading()">
+        {{ loading() ? 'Cargando…' : 'Filtrar' }}
+      </button>
+      <button type="button" class="btn-secondary" [disabled]="loading()" (click)="load()">
+        Refrescar
+      </button>
+      <button type="button" class="btn-secondary" [disabled]="loading()" (click)="clearFilters()">
+        Limpiar
+      </button>
+    </div>
+  </form>
+</section>
+
+@if (failure(); as err) {
+  <section class="panel result-error" aria-live="polite">
+    <div class="result-header">
+      <span class="badge badge-error">{{ err.code }}</span>
+      <h2>Error al cargar historial</h2>
+    </div>
+    <p class="result-message">{{ err.message }}</p>
+  </section>
+}
+
+<section class="panel">
+  @if (loading() && items().length === 0) {
+    <p class="state-msg">Cargando historial…</p>
+  } @else if (!loading() && items().length === 0 && !failure()) {
+    <p class="state-msg">
+      No hay eventos de impresión. Imprime desde la pantalla Impresión y vuelve a refrescar.
+    </p>
+  } @else {
+    <div class="table-wrap">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>ETQ</th>
+            <th>LPN</th>
+            <th>Zona</th>
+            <th>Usuario</th>
+            <th>Fecha</th>
+            <th>Resultado</th>
+            <th>Tipo de evento</th>
+            <th>Motivo</th>
+            <th>Motivo reimpresión</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of items(); track item.etqId + item.lpnId + item.printedAt + item.eventType + item.result) {
+            <tr>
+              <td>{{ item.etqId }}</td>
+              <td>{{ item.lpnId }}</td>
+              <td>{{ item.zone }}</td>
+              <td>{{ item.requestedBy }}</td>
+              <td>{{ item.printedAt }}</td>
+              <td>
+                <span
+                  class="badge"
+                  [class.badge-ok]="isSuccessResult(item.result)"
+                  [class.badge-error]="!isSuccessResult(item.result)">
+                  {{ item.result }}
+                </span>
+              </td>
+              <td>
+                <span
+                  class="badge"
+                  [class.badge-warn]="isReprint(item.eventType)"
+                  [class.badge-ok]="!isReprint(item.eventType)">
+                  {{ item.eventType }}
+                </span>
+              </td>
+              <td>{{ item.reason || '—' }}</td>
+              <td>{{ item.reprintReason || '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
