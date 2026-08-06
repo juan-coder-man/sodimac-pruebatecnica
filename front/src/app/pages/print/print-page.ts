@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { HealthApiService } from '../../services/health-api.service';
 
 @Component({
   selector: 'app-print-page',
@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
   styleUrl: './print-page.scss'
 })
 export class PrintPage {
-  private readonly http = inject(HttpClient);
+  private readonly healthApi = inject(HealthApiService);
 
   protected readonly apiUrl = environment.apiUrl;
   protected readonly checking = signal(false);
@@ -21,7 +21,7 @@ export class PrintPage {
     this.healthOk.set(null);
     this.healthPayload.set('');
 
-    this.http.get<Record<string, unknown>>(`${environment.apiUrl}/health`).subscribe({
+    this.healthApi.check().subscribe({
       next: (res) => {
         this.checking.set(false);
         this.healthOk.set(true);
