@@ -3,6 +3,15 @@
     <span class="shell-title">Impresión de ETQ</span>
     <span class="shell-subtitle">Submódulo logístico</span>
   </div>
+  @if (!isProduction) {
+    <button
+      type="button"
+      class="dev-data-btn"
+      (click)="openDevPanel()"
+    >
+      Datos de prueba
+    </button>
+  }
   <nav class="shell-nav" aria-label="Principal">
     <a routerLink="/print" routerLinkActive="is-active">Impresión</a>
     <a routerLink="/history" routerLinkActive="is-active">Historial</a>
@@ -12,3 +21,7 @@
 <main class="shell-main">
   <router-outlet />
 </main>
+
+@if (!isProduction && devPanelOpen()) {
+  <app-dev-test-data-panel (closed)="closeDevPanel()" />
+}

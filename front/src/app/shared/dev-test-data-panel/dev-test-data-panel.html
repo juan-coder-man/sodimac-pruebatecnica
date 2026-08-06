@@ -1,0 +1,75 @@
+<aside
+  class="dev-panel"
+  role="dialog"
+  aria-labelledby="dev-panel-title"
+  [style.left.px]="left()"
+  [style.top.px]="top()"
+>
+  <header
+    class="dev-panel-header"
+    (pointerdown)="onDragStart($event)"
+    (pointermove)="onDragMove($event)"
+    (pointerup)="onDragEnd($event)"
+    (pointercancel)="onDragEnd($event)"
+  >
+    <div class="dev-panel-header-text">
+      <span class="dev-panel-badge">DEV</span>
+      <h2 id="dev-panel-title" class="dev-panel-title">Datos de prueba</h2>
+    </div>
+    <button
+      type="button"
+      class="dev-panel-close"
+      (click)="onClose()"
+      aria-label="Cerrar panel de datos de prueba"
+    >
+      Cerrar
+    </button>
+  </header>
+
+  <p class="dev-panel-warning">
+    Solo desarrollo — eliminar en etapa productiva.
+  </p>
+
+  <div class="dev-panel-body">
+    <section class="dev-section">
+      <h3 class="dev-section-title">Valores comunes</h3>
+      <ul class="dev-field-list">
+        @for (field of commonFields; track field.label) {
+          <li class="dev-field">
+            <span class="dev-field-label">{{ field.label }}</span>
+            <code class="dev-field-value">{{ field.value }}</code>
+            <button
+              type="button"
+              class="dev-copy-btn"
+              (click)="onCopy(field, 'common-' + field.label)"
+            >
+              {{ copyLabel('common-' + field.label) }}
+            </button>
+          </li>
+        }
+      </ul>
+    </section>
+
+    @for (scenario of scenarios; track scenario.id) {
+      <section class="dev-section">
+        <h3 class="dev-section-title">{{ scenario.title }}</h3>
+        <p class="dev-section-desc">{{ scenario.description }}</p>
+        <ul class="dev-field-list">
+          @for (field of scenario.fields; track field.label) {
+            <li class="dev-field">
+              <span class="dev-field-label">{{ field.label }}</span>
+              <code class="dev-field-value">{{ field.value }}</code>
+              <button
+                type="button"
+                class="dev-copy-btn"
+                (click)="onCopy(field, scenario.id + '-' + field.label)"
+              >
+                {{ copyLabel(scenario.id + '-' + field.label) }}
+              </button>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  </div>
+</aside>
