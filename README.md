@@ -55,6 +55,66 @@ CORS está habilitado en el back para `http://localhost:4200`.
 | [front/docs/ARQUITECTURA.md](front/docs/ARQUITECTURA.md) | Capas FE y flujo UI→API |
 | [front/docs/PRUEBAS.md](front/docs/PRUEBAS.md) | Tests del frontend |
 
+## Ejemplos Postman
+
+Colección: [`back-java/postman/etq-print.postman_collection.json`](back-java/postman/etq-print.postman_collection.json)
+
+### Consulta OK
+
+`POST /api/v1/etq/consulta` → `ETQ_FOUND`
+
+<p align="center">
+  <img src="docs/images/consulta-ok.png" alt="Consulta OK" width="520" />
+</p>
+
+### Consulta 404
+
+LPN inexistente → `LPN_NOT_FOUND`
+
+<p align="center">
+  <img src="docs/images/consulta-404.png" alt="Consulta 404" width="520" />
+</p>
+
+### Print OK
+
+Impresión exitosa → `PRINT_OK`
+
+<p align="center">
+  <img src="docs/images/print-ok.png" alt="Print OK" width="520" />
+</p>
+
+### Print anulado
+
+Documento inválido → `DOCUMENT_INVALID_STATUS`
+
+<p align="center">
+  <img src="docs/images/print-anulado.png" alt="Print anulado" width="520" />
+</p>
+
+### Print sin stock
+
+Inventario insuficiente → `INSUFFICIENT_INVENTORY`
+
+<p align="center">
+  <img src="docs/images/print-sin-stock.png" alt="Print sin stock" width="520" />
+</p>
+
+### Reprint
+
+Reimpresión → `REPRINT_OK`
+
+<p align="center">
+  <img src="docs/images/reprint.png" alt="Reprint" width="520" />
+</p>
+
+### Historial
+
+`GET /api/v1/print/history` → `HISTORY_OK`
+
+<p align="center">
+  <img src="docs/images/history.png" alt="Historial" width="520" />
+</p>
+
 ## Fuera de alcance
 
 Generación de ETQ nuevas, impresoras físicas, sistemas corporativos reales (Oracle, Hub auth, APIM).
