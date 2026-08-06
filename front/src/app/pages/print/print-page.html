@@ -1,29 +1,172 @@
 <section class="panel">
   <h1>Impresión de ETQ</h1>
   <p class="lead">
-    Scaffold Fase 0. El formulario (LPN, zona, usuario) llega en la Fase 2.
+    Completa LPN, zona y usuario para simular la impresión. El motivo de reimpresión es opcional.
   </p>
+  <p class="api-hint">API: <code>{{ apiUrl }}</code></p>
 
-  <dl class="meta">
-    <div>
-      <dt>API</dt>
-      <dd><code>{{ apiUrl }}</code></dd>
+  <form class="print-form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-grid">
+      <label class="field">
+        <span>LPN <abbr title="obligatorio">*</abbr></span>
+        <input type="text" formControlName="lpn" autocomplete="off" placeholder="LPN-000987654" />
+        @if (showError('lpn')) {
+          <span class="field-error">El LPN es obligatorio</span>
+        }
+      </label>
+
+      <label class="field">
+        <span>Zona <abbr title="obligatorio">*</abbr></span>
+        <input type="text" formControlName="zone" autocomplete="off" placeholder="ZONA-PICKING-A" />
+        @if (showError('zone')) {
+          <span class="field-error">La zona es obligatoria</span>
+        }
+      </label>
+
+      <label class="field">
+        <span>Usuario <abbr title="obligatorio">*</abbr></span>
+        <input type="text" formControlName="requestedBy" autocomplete="username" placeholder="usuario.operacion" />
+        @if (showError('requestedBy')) {
+          <span class="field-error">El usuario es obligatorio</span>
+        }
+      </label>
+
+      <label class="field field-full">
+        <span>Motivo de reimpresión <span class="optional">(opcional)</span></span>
+        <input type="text" formControlName="reprintReason" autocomplete="off" placeholder="Etiqueta dañada / ilegible" />
+      </label>
     </div>
-  </dl>
 
-  <div class="actions">
-    <button type="button" class="btn-primary" [disabled]="checking()" (click)="checkHealth()">
-      {{ checking() ? 'Verificando…' : 'Verificar health del backend' }}
-    </button>
+    <div class="actions">
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="submitting() || form.invalid">
+        {{ submitting() ? 'Imprimiendo…' : 'Imprimir' }}
+      </button>
+    </div>
+  </form>
 
-    @if (healthOk() === true) {
-      <span class="badge badge-ok">Backend OK</span>
-    } @else if (healthOk() === false) {
-      <span class="badge badge-error">Backend no disponible</span>
-    }
-  </div>
-
-  @if (healthPayload()) {
-    <pre class="payload">{{ healthPayload() }}</pre>
-  }
+  <p class="seed-hint">
+    LPNs de prueba:
+    <code>LPN-000987654</code> (OK / reimpresión),
+    <code>LPN-ANULADA-001</code>,
+    <code>LPN-DEVUELTA-001</code>,
+    <code>LPN-SIN-STOCK-001</code>,
+    <code>LPN-NO-EXISTE</code>.
+    Zona ejemplo: <code>ZONA-PICKING-A</code>.
+  </p>
 </section>
+
+@if (lastFailure(); as failure) {
+  <section class="panel result-panel result-error" aria-live="polite">
+    <div class="result-header">
+      <span class="badge badge-error">{{ failure.code }}</span>
+      <h2>Error de solicitud</h2>
+    </div>
+    <p class="result-message">{{ failure.message }}</p>
+    @if (failure.fieldErrors.length > 0) {
+      <ul class="field-errors">
+        @for (err of failure.fieldErrors; track err.field + err.code) {
+          <li>
+            @if (err.field) {
+              <strong>{{ err.field }}:</strong>
+            }
+            {{ err.message }}
+          </li>
+        }
+      </ul>
+    }
+  </section>
+}
+
+@if (lastResponse(); as response) {
+  <section
+    class="panel result-panel"
+    [class.result-ok]="isSuccessCode(response.code)"
+    [class.result-error]="!isSuccessCode(response.code)"
+    aria-live="polite">
+    <div class="result-header">
+      <span
+        class="badge"
+        [class.badge-ok]="isSuccessCode(response.code)"
+        [class.badge-error]="!isSuccessCode(response.code)">
+        {{ response.code }}
+      </span>
+      @if (isReprint(response.code, response.data?.eventType)) {
+        <span class="badge badge-warn">REIMPRESIÓN</span>
+      }
+      <h2>{{ isSuccessCode(response.code) ? 'Resultado' : 'Rechazo' }}</h2>
+    </div>
+
+    <p class="result-message">{{ displayMessage() || response.message }}</p>
+
+    @if (response.data?.reason) {
+      <p class="result-reason"><strong>Motivo:</strong> {{ response.data?.reason }}</p>
+    }
+
+    @if (response.data; as data) {
+      <dl class="result-meta">
+        @if (data.requestId) {
+          <div>
+            <dt>requestId</dt>
+            <dd>{{ data.requestId }}</dd>
+          </div>
+        }
+        @if (data.etqId) {
+          <div>
+            <dt>ETQ</dt>
+            <dd>{{ data.etqId }}</dd>
+          </div>
+        }
+        @if (data.lpnId) {
+          <div>
+            <dt>LPN</dt>
+            <dd>{{ data.lpnId }}</dd>
+          </div>
+        }
+        @if (data.zone) {
+          <div>
+            <dt>Zona</dt>
+            <dd>{{ data.zone }}</dd>
+          </div>
+        }
+        @if (data.eventType) {
+          <div>
+            <dt>Tipo</dt>
+            <dd>{{ data.eventType }}</dd>
+          </div>
+        }
+        @if (data.result) {
+          <div>
+            <dt>Resultado</dt>
+            <dd>{{ data.result }}</dd>
+          </div>
+        }
+        @if (data.printedAt) {
+          <div>
+            <dt>Fecha</dt>
+            <dd>{{ data.printedAt }}</dd>
+          </div>
+        }
+        @if (data.reprintReason) {
+          <div>
+            <dt>Motivo reimpresión</dt>
+            <dd>{{ data.reprintReason }}</dd>
+          </div>
+        }
+      </dl>
+
+      @if (data.zpl) {
+        <div class="zpl-block">
+          <button type="button" class="btn-secondary" (click)="toggleZpl()">
+            {{ zplOpen() ? 'Ocultar ZPL' : 'Ver ZPL' }}
+          </button>
+          @if (zplOpen()) {
+            <pre class="payload">{{ data.zpl }}</pre>
+          }
+        </div>
+      }
+    }
+  </section>
+}
