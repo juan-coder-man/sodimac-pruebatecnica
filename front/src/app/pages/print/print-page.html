@@ -1,0 +1,29 @@
+<section class="panel">
+  <h1>Impresión de ETQ</h1>
+  <p class="lead">
+    Scaffold Fase 0. El formulario (LPN, zona, usuario) llega en la Fase 2.
+  </p>
+
+  <dl class="meta">
+    <div>
+      <dt>API</dt>
+      <dd><code>{{ apiUrl }}</code></dd>
+    </div>
+  </dl>
+
+  <div class="actions">
+    <button type="button" class="btn-primary" [disabled]="checking()" (click)="checkHealth()">
+      {{ checking() ? 'Verificando…' : 'Verificar health del backend' }}
+    </button>
+
+    @if (healthOk() === true) {
+      <span class="badge badge-ok">Backend OK</span>
+    } @else if (healthOk() === false) {
+      <span class="badge badge-error">Backend no disponible</span>
+    }
+  </div>
+
+  @if (healthPayload()) {
+    <pre class="payload">{{ healthPayload() }}</pre>
+  }
+</section>

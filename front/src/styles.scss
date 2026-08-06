@@ -1,0 +1,32 @@
+/* Estilos globales — tokens del módulo ETQ */
+:root {
+  --color-primary: #0072ce;
+  --color-primary-hover: #005fa8;
+  --color-text: #1a1a1a;
+  --color-muted: #5f6368;
+  --color-border: #e0e0e0;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f5f7fa;
+  --color-bg: #f0f2f5;
+  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}
