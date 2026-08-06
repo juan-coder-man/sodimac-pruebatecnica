@@ -1,10 +1,18 @@
 package co.homecenter.etq.api.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class PrintRequest {
 
+    @NotBlank(message = "El LPN es obligatorio")
     private String lpn;
+
+    @NotBlank(message = "La zona es obligatoria")
     private String zone;
+
+    @NotBlank(message = "El usuario solicitante es obligatorio")
     private String requestedBy;
+
     private String reprintReason;
 
     public String getLpn() {

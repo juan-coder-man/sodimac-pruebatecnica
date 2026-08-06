@@ -10,6 +10,7 @@ import co.homecenter.etq.api.dto.request.PrintRequest;
 import co.homecenter.etq.api.dto.response.ApiResponse;
 import co.homecenter.etq.api.dto.response.PrintResponseData;
 import co.homecenter.etq.application.service.PrintService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/print")
@@ -22,22 +23,8 @@ public class PrintController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<PrintResponseData>> imprimir(@RequestBody PrintRequest request) {
-        if (request == null
-                || isBlank(request.getLpn())
-                || isBlank(request.getZone())
-                || isBlank(request.getRequestedBy())) {
-            return ResponseEntity.badRequest()
-                    .body(ApiResponse.failure(
-                            "VALIDATION_ERROR",
-                            "Los campos lpn, zone y requestedBy son obligatorios"));
-        }
-
-        ApiResponse<PrintResponseData> response = printService.imprimir(request);
-        return ResponseEntity.ok(response);
-    }
-
-    private boolean isBlank(String value) {
-        return value == null || value.isBlank();
+    public ResponseEntity<ApiResponse<PrintResponseData>> imprimir(
+            @Valid @RequestBody PrintRequest request) {
+        return ResponseEntity.ok(printService.imprimir(request));
     }
 }

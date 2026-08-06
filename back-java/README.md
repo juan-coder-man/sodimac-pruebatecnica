@@ -67,6 +67,8 @@ Casos semilla:
 
 Los rechazos de negocio responden HTTP 200 con `success: false`. Campos obligatorios faltantes → HTTP 400.
 
+Detalle del contrato HTTP y códigos: [docs/API.md](docs/API.md).
+
 ## Swagger UI
 
 Tras arrancar: `http://localhost:8080/swagger-ui.html`
