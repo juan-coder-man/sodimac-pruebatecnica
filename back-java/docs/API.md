@@ -101,3 +101,27 @@ Campos obligatorios: `lpn`, `zone`, `requestedBy`.
 | `INSUFFICIENT_INVENTORY` | Stock insuficiente en la zona |
 | `PRODUCT_NOT_SUPPLIED` | Producto no abastecido en la zona |
 | `VALIDATION_ERROR` | Request inválido (HTTP 400) |
+
+### `GET /api/v1/print/history`
+
+Consulta el historial de impresiones/reimpresiones (auditoría en memoria).
+
+Query params opcionales:
+
+| Param | Descripción |
+|-------|-------------|
+| `lpn` | Filtrar por LPN |
+| `zone` | Filtrar por zona |
+| `result` | `EXITOSO` o `RECHAZADO` |
+
+- 200 + `HISTORY_OK` con lista (más reciente primero)
+- 400 + `VALIDATION_ERROR` si `result` no es válido
+
+Ejemplo:
+
+```bash
+curl -s 'http://localhost:8080/api/v1/print/history?lpn=LPN-000987654&result=EXITOSO'
+```
+
+Cada ítem incluye: `etqId`, `lpnId`, `zone`, `requestedBy`, `printedAt`, `result`, `eventType`, `reason`, `reprintReason`.
+

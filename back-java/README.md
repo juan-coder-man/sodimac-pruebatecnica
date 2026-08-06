@@ -69,6 +69,18 @@ Los rechazos de negocio responden HTTP 200 con `success: false`. Campos obligato
 
 Detalle del contrato HTTP y códigos: [docs/API.md](docs/API.md).
 
+## Historial de impresiones
+
+```bash
+# Tras imprimir al menos una vez:
+curl -s 'http://localhost:8080/api/v1/print/history'
+
+# Con filtros opcionales:
+curl -s 'http://localhost:8080/api/v1/print/history?lpn=LPN-000987654&result=EXITOSO'
+```
+
+CORS habilitado para `http://localhost:4200` (Angular local).
+
 ## Swagger UI
 
 Tras arrancar: `http://localhost:8080/swagger-ui.html`
