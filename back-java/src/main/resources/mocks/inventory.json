@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "zone": "ZONA-PICKING-A",
+    "productCode": "PROD-001",
+    "availableQty": 50,
+    "supplied": true
+  },
+  {
+    "zone": "ZONA-PICKING-A",
+    "productCode": "PROD-002",
+    "availableQty": 30,
+    "supplied": true
+  },
+  {
+    "zone": "ZONA-PICKING-B",
+    "productCode": "PROD-002",
+    "availableQty": 10,
+    "supplied": true
+  },
+  {
+    "zone": "ZONA-PICKING-C",
+    "productCode": "PROD-003",
+    "availableQty": 2,
+    "supplied": false
+  }
+]

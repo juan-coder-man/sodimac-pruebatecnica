@@ -1,1 +1,124 @@
-[]
+[
+  {
+    "requestId": "REQ-20260605-001",
+    "requestDateTime": "2026-06-05T10:15:00-05:00",
+    "requestedBy": "usuario.operacion",
+    "zone": "ZONA-PICKING-A",
+    "document": {
+      "documentType": "NOTA_PEDIDO",
+      "documentNumber": "NP-458721",
+      "status": "LIBERADA"
+    },
+    "labels": [
+      {
+        "etqId": "ETQ-10001",
+        "lpnId": "LPN-000987654",
+        "isPreGenerated": true,
+        "templateCode": "TPL-ETQ-STD-4X6",
+        "zpl": "^XA^FO50,50^ADN,36,20^FDEtiqueta ETQ-10001^FS^FO50,100^BCN,100,Y,N,N^FDLPN-000987654^FS^XZ"
+      }
+    ],
+    "products": [
+      {
+        "productCode": "PROD-001",
+        "productDescription": "Martillo 16oz",
+        "requestedQty": 2,
+        "uom": "UND"
+      },
+      {
+        "productCode": "PROD-002",
+        "productDescription": "Guantes de seguridad",
+        "requestedQty": 1,
+        "uom": "PAR"
+      }
+    ],
+    "reprintReason": null
+  },
+  {
+    "requestId": "REQ-20260605-002",
+    "requestDateTime": "2026-06-05T11:00:00-05:00",
+    "requestedBy": "usuario.operacion",
+    "zone": "ZONA-PICKING-A",
+    "document": {
+      "documentType": "NOTA_PEDIDO",
+      "documentNumber": "NP-458800",
+      "status": "ANULADA"
+    },
+    "labels": [
+      {
+        "etqId": "ETQ-10002",
+        "lpnId": "LPN-ANULADA-001",
+        "isPreGenerated": true,
+        "templateCode": "TPL-ETQ-STD-4X6",
+        "zpl": "^XA^FO50,50^ADN,36,20^FDEtiqueta ETQ-10002^FS^XZ"
+      }
+    ],
+    "products": [
+      {
+        "productCode": "PROD-001",
+        "productDescription": "Martillo 16oz",
+        "requestedQty": 1,
+        "uom": "UND"
+      }
+    ],
+    "reprintReason": null
+  },
+  {
+    "requestId": "REQ-20260605-003",
+    "requestDateTime": "2026-06-05T11:30:00-05:00",
+    "requestedBy": "usuario.operacion",
+    "zone": "ZONA-PICKING-B",
+    "document": {
+      "documentType": "NOTA_PEDIDO",
+      "documentNumber": "NP-458801",
+      "status": "DEVUELTA"
+    },
+    "labels": [
+      {
+        "etqId": "ETQ-10003",
+        "lpnId": "LPN-DEVUELTA-001",
+        "isPreGenerated": true,
+        "templateCode": "TPL-ETQ-STD-4X6",
+        "zpl": "^XA^FO50,50^ADN,36,20^FDEtiqueta ETQ-10003^FS^XZ"
+      }
+    ],
+    "products": [
+      {
+        "productCode": "PROD-002",
+        "productDescription": "Guantes de seguridad",
+        "requestedQty": 2,
+        "uom": "PAR"
+      }
+    ],
+    "reprintReason": null
+  },
+  {
+    "requestId": "REQ-20260605-004",
+    "requestDateTime": "2026-06-05T12:00:00-05:00",
+    "requestedBy": "usuario.operacion",
+    "zone": "ZONA-PICKING-C",
+    "document": {
+      "documentType": "NOTA_PEDIDO",
+      "documentNumber": "NP-458802",
+      "status": "LIBERADA"
+    },
+    "labels": [
+      {
+        "etqId": "ETQ-10004",
+        "lpnId": "LPN-SIN-STOCK-001",
+        "isPreGenerated": true,
+        "templateCode": "TPL-ETQ-STD-4X6",
+        "zpl": "^XA^FO50,50^ADN,36,20^FDEtiqueta ETQ-10004^FS^XZ"
+      }
+    ],
+    "products": [
+      {
+        "productCode": "PROD-003",
+        "productDescription": "Taladro inalambrico",
+        "requestedQty": 5,
+        "uom": "UND"
+      }
+    ],
+    "reprintReason": null
+  }
+]
