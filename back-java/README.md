@@ -7,6 +7,13 @@ Submódulo de impresión de ETQ — backend Spring Boot (prueba técnica).
 - Java 25+
 - Maven 3.9+
 
+Verificación:
+
+```bash
+java -version
+mvn -v
+```
+
 ## Ejecución local
 
 ```bash
