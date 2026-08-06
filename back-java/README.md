@@ -97,3 +97,14 @@ Variable `baseUrl` por defecto: `http://localhost:8080`.
 
 Incluye: health, consulta OK/404, print OK/anulado/sin stock, reprint e historial.
 
+## Pruebas
+
+```bash
+cd back-java
+mvn test
+```
+
+Incluye unitarios (reglas y mapper), `@WebMvcTest` de controllers y un flujo de integración contra los mocks JSON.
+
+Detalle: [docs/PRUEBAS.md](docs/PRUEBAS.md).
+
