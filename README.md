@@ -41,10 +41,17 @@ CORS está habilitado en el back para `http://localhost:4200`.
 4. Abrir **Historial** y refrescar → eventos visibles.
 5. Probar rechazo: `LPN-ANULADA-001` o `LPN-NO-EXISTE`.
 
+## Demo en video
+
+Recorrido funcional de la UI (consulta, impresión, reimpresión e historial):
+
+[Ver demo funcional](docs/video/test-funcional.mp4)
+
 ## Documentación
 
 | Documento | Contenido |
 |-----------|-----------|
+| [docs/video/test-funcional.mp4](docs/video/test-funcional.mp4) | Demo funcional de la UI |
 | [back-java/README.md](back-java/README.md) | Cómo correr el API y estructura |
 | [back-java/docs/API.md](back-java/docs/API.md) | Contratos HTTP y códigos |
 | [back-java/docs/ARQUITECTURA.md](back-java/docs/ARQUITECTURA.md) | Capas y C4 del back |
