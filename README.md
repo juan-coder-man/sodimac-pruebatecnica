@@ -41,12 +41,6 @@ CORS está habilitado en el back para `http://localhost:4200`.
 4. Abrir **Historial** y refrescar → eventos visibles.
 5. Probar rechazo: `LPN-ANULADA-001` o `LPN-NO-EXISTE`.
 
-## Demo en video
-
-Recorrido funcional de la UI (consulta, impresión, reimpresión e historial):
-
-[Ver demo funcional](docs/video/test-funcional.mp4)
-
 ## Documentación
 
 | Documento | Contenido |
@@ -61,6 +55,16 @@ Recorrido funcional de la UI (consulta, impresión, reimpresión e historial):
 | [front/README.md](front/README.md) | Cómo correr la UI |
 | [front/docs/ARQUITECTURA.md](front/docs/ARQUITECTURA.md) | Capas FE y flujo UI→API |
 | [front/docs/PRUEBAS.md](front/docs/PRUEBAS.md) | Tests del frontend |
+
+## Demo en video
+
+Recorrido funcional de la UI (consulta, impresión, reimpresión e historial):
+
+<p align="center">
+  <video src="docs/video/test-funcional.mp4" controls width="720">
+    <a href="docs/video/test-funcional.mp4">Ver demo funcional</a>
+  </video>
+</p>
 
 ## Ejemplos Postman
 
