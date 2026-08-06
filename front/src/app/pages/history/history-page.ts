@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HistoryFilters, HistoryItem, UiFailure } from '../../core/models';
 import { toUiFailure } from '../../core/utils/api-error.util';
+import { downloadCsv, historyToCsv } from '../../core/utils/csv.util';
 import { HistoryApiService } from '../../services/history-api.service';
 import { ApiFailurePanel } from '../../shared/api-failure/api-failure';
 
@@ -63,6 +64,14 @@ export class HistoryPage implements OnInit {
       result: ''
     });
     this.load();
+  }
+
+  protected exportCsv(): void {
+    const rows = this.items();
+    if (rows.length === 0) {
+      return;
+    }
+    downloadCsv('historial-etq.csv', historyToCsv(rows));
   }
 
   protected isSuccessResult(result: string): boolean {

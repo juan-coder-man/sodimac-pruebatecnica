@@ -117,6 +117,12 @@ h2 {
   gap: 0.75rem;
 }
 
+.zpl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .payload {
   margin: 0;
   width: 100%;

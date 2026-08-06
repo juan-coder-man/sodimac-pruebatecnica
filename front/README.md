@@ -23,16 +23,18 @@ Abre [http://localhost:4200](http://localhost:4200).
 
 | Ruta | Descripción |
 |------|-------------|
-| `/print` | Consulta LPN + impresión |
-| `/history` | Historial de impresiones |
+| `/print` | Consulta LPN + impresión (incluye **Copiar ZPL**) |
+| `/history` | Historial de impresiones (incluye **Exportar CSV**) |
 | `/` | Redirect a `/print` |
 
-Backend:
+Backend (en otra terminal):
 
 ```bash
 cd ../back-java
 mvn spring-boot:run
 ```
+
+Swagger del API: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
 ## Configuración
 
@@ -44,10 +46,40 @@ apiUrl: 'http://localhost:8080/api/v1'
 
 CORS del back debe permitir `http://localhost:4200`.
 
+## Estructura
+
+```
+src/app/
+├── pages/print/      # Consulta + impresión
+├── pages/history/    # Historial + filtros
+├── services/         # Etq, Print, History, Health API
+├── core/models/      # ApiResponse y DTOs
+├── core/utils/       # códigos y mapeo de errores
+└── shared/           # shell, etq-detail, print-result, api-failure
+```
+
+## Datos de prueba (mocks del back)
+
+| LPN | Uso |
+|-----|-----|
+| `LPN-000987654` | Impresión OK / reimpresión (`ZONA-PICKING-A`) |
+| `LPN-ANULADA-001` | Documento anulado |
+| `LPN-DEVUELTA-001` | Documento devuelto |
+| `LPN-SIN-STOCK-001` | Inventario insuficiente / no abastecido |
+| `LPN-NO-EXISTE` | 404 en consulta |
+
+## Documentación
+
+| Documento | Contenido |
+|-----------|-----------|
+| [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md) | Capas FE, flujo UI→API, `success` vs HTTP |
+| [docs/PRUEBAS.md](docs/PRUEBAS.md) | Cómo correr tests y qué cubren |
+| [../back-java/docs/API.md](../back-java/docs/API.md) | Contratos HTTP del backend |
+
 ## Pruebas
 
 ```bash
 npm test -- --watch=false
 ```
 
-Detalle de cobertura y criterios: [`docs/PRUEBAS.md`](docs/PRUEBAS.md).
+Detalle: [`docs/PRUEBAS.md`](docs/PRUEBAS.md).

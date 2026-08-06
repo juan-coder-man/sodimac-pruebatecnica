@@ -36,6 +36,13 @@
       <button type="button" class="btn-secondary" [disabled]="loading()" (click)="clearFilters()">
         Limpiar
       </button>
+      <button
+        type="button"
+        class="btn-secondary"
+        [disabled]="loading() || items().length === 0"
+        (click)="exportCsv()">
+        Exportar CSV
+      </button>
     </div>
   </form>
 

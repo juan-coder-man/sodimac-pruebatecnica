@@ -76,9 +76,14 @@
 
     @if (data.zpl) {
       <div class="zpl-block">
-        <button type="button" class="btn-secondary" (click)="onToggleZpl()">
-          {{ zplOpen() ? 'Ocultar ZPL' : 'Ver ZPL' }}
-        </button>
+        <div class="zpl-actions">
+          <button type="button" class="btn-secondary" (click)="onToggleZpl()">
+            {{ zplOpen() ? 'Ocultar ZPL' : 'Ver ZPL' }}
+          </button>
+          <button type="button" class="btn-secondary" (click)="onCopyZpl()">
+            {{ zplCopied() ? 'Copiado' : 'Copiar ZPL' }}
+          </button>
+        </div>
         @if (zplOpen()) {
           <pre class="payload">{{ data.zpl }}</pre>
         }
