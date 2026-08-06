@@ -38,16 +38,19 @@
       </button>
     </div>
   </form>
+
+  <p class="seed-hint">
+    LPNs de prueba:
+    <code>LPN-000987654</code>,
+    <code>LPN-ANULADA-001</code>,
+    <code>LPN-DEVUELTA-001</code>,
+    <code>LPN-SIN-STOCK-001</code>.
+    Zona: <code>ZONA-PICKING-A</code>.
+  </p>
 </section>
 
 @if (failure(); as err) {
-  <section class="panel result-error" aria-live="polite">
-    <div class="result-header">
-      <span class="badge badge-error">{{ err.code }}</span>
-      <h2>Error al cargar historial</h2>
-    </div>
-    <p class="result-message">{{ err.message }}</p>
-  </section>
+  <app-api-failure [failure]="err" heading="Error al cargar historial" />
 }
 
 <section class="panel">

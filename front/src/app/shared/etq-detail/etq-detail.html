@@ -1,0 +1,92 @@
+<section class="panel detail-panel" aria-live="polite">
+  <div class="result-header">
+    <span class="badge badge-ok">ETQ_FOUND</span>
+    <h2>Detalle ETQ</h2>
+  </div>
+
+  @if (isInvalidDocumentStatus(detail().documentStatus)) {
+    <div class="banner-warn" role="status">
+      El documento está en estado <strong>{{ detail().documentStatus }}</strong>.
+      La impresión será rechazada por reglas de negocio.
+    </div>
+  }
+
+  <dl class="detail-meta">
+    <div>
+      <dt>ETQ</dt>
+      <dd>{{ detail().idEtiqueta }}</dd>
+    </div>
+    <div>
+      <dt>LPN</dt>
+      <dd>{{ detail().lpnId }}</dd>
+    </div>
+    <div>
+      <dt>Orden de compra</dt>
+      <dd>{{ detail().purchaseOrder }}</dd>
+    </div>
+    <div>
+      <dt>tcOrderId</dt>
+      <dd>{{ detail().tcOrderId }}</dd>
+    </div>
+    <div>
+      <dt>SKU</dt>
+      <dd>{{ detail().sku }}</dd>
+    </div>
+    <div>
+      <dt>Unidades</dt>
+      <dd>{{ detail().unidades }}</dd>
+    </div>
+    <div>
+      <dt>Zona</dt>
+      <dd>{{ detail().zone }}</dd>
+    </div>
+    <div>
+      <dt>Estado documento</dt>
+      <dd>
+        <span
+          class="badge"
+          [class.badge-warn]="isInvalidDocumentStatus(detail().documentStatus)"
+          [class.badge-ok]="!isInvalidDocumentStatus(detail().documentStatus)">
+          {{ detail().documentStatus }}
+        </span>
+      </dd>
+    </div>
+  </dl>
+
+  @if (detail().products.length > 0) {
+    <h3 class="products-title">Productos</h3>
+    <div class="products-table-wrap">
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+            <th>UOM</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of detail().products; track product.productCode) {
+            <tr>
+              <td>{{ product.productCode }}</td>
+              <td>{{ product.productDescription }}</td>
+              <td>{{ product.requestedQty }}</td>
+              <td>{{ product.uom }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (detail().zpl) {
+    <div class="zpl-block">
+      <button type="button" class="btn-secondary" (click)="onToggleZpl()">
+        {{ zplOpen() ? 'Ocultar ZPL' : 'Ver ZPL' }}
+      </button>
+      @if (zplOpen()) {
+        <pre class="payload">{{ detail().zpl }}</pre>
+      }
+    </div>
+  }
+</section>

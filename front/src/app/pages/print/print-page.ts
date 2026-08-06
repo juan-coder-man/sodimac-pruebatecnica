@@ -1,16 +1,21 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { ApiResponse, EtqDetail, PrintResponseData, UiFailure } from '../../core/models';
 import { ApiCodes } from '../../core/utils/api-codes';
 import { messageForCode, toUiFailure } from '../../core/utils/api-error.util';
 import { EtqApiService } from '../../services/etq-api.service';
 import { PrintApiService } from '../../services/print-api.service';
+import { ApiFailurePanel } from '../../shared/api-failure/api-failure';
+import { EtqDetailPanel } from '../../shared/etq-detail/etq-detail';
+import { PrintResultPanel } from '../../shared/print-result/print-result';
+
+const SERVER_FIELD_NAMES = ['lpn', 'zone', 'requestedBy', 'reprintReason'] as const;
 
 @Component({
   selector: 'app-print-page',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, EtqDetailPanel, PrintResultPanel, ApiFailurePanel],
   templateUrl: './print-page.html',
   styleUrl: './print-page.scss'
 })
@@ -49,6 +54,7 @@ export class PrintPage {
     this.etqDetail.set(null);
     this.consultaZplOpen.set(false);
     this.lastFailure.set(null);
+    this.clearServerErrors();
 
     this.etqApi.consultar(lpn).subscribe({
       next: (res) => {
@@ -63,16 +69,20 @@ export class PrintPage {
         }
 
         this.etqDetail.set(null);
-        this.lastFailure.set({
+        const failure: UiFailure = {
           code: res.code || ApiCodes.LPN_NOT_FOUND,
           message: messageForCode(res.code, res.message),
           fieldErrors: res.errors ?? []
-        });
+        };
+        this.lastFailure.set(failure);
+        this.applyServerFieldErrors(failure);
       },
       error: (err: unknown) => {
         this.consulting.set(false);
         this.etqDetail.set(null);
-        this.lastFailure.set(toUiFailure(err));
+        const failure = toUiFailure(err);
+        this.lastFailure.set(failure);
+        this.applyServerFieldErrors(failure);
       }
     });
   }
@@ -91,6 +101,7 @@ export class PrintPage {
     this.lastFailure.set(null);
     this.displayMessage.set('');
     this.zplOpen.set(false);
+    this.clearServerErrors();
 
     this.printApi
       .imprimir({
@@ -107,7 +118,9 @@ export class PrintPage {
         },
         error: (err: unknown) => {
           this.submitting.set(false);
-          this.lastFailure.set(toUiFailure(err));
+          const failure = toUiFailure(err);
+          this.lastFailure.set(failure);
+          this.applyServerFieldErrors(failure);
         }
       });
   }
@@ -120,20 +133,44 @@ export class PrintPage {
     this.consultaZplOpen.update((open) => !open);
   }
 
-  protected isSuccessCode(code: string): boolean {
-    return code === ApiCodes.PRINT_OK || code === ApiCodes.REPRINT_OK;
-  }
-
-  protected isReprint(code: string, eventType: string | null | undefined): boolean {
-    return code === ApiCodes.REPRINT_OK || eventType === 'REIMPRESION';
-  }
-
-  protected isInvalidDocumentStatus(status: string): boolean {
-    return status === 'ANULADA' || status === 'DEVUELTA';
-  }
-
   protected showError(controlName: 'lpn' | 'zone' | 'requestedBy'): boolean {
     const control = this.form.controls[controlName];
-    return control.invalid && control.touched;
+    return !!control.errors?.['required'] && control.touched;
+  }
+
+  protected serverError(controlName: (typeof SERVER_FIELD_NAMES)[number]): string | null {
+    const control = this.form.controls[controlName];
+    const server = control.errors?.['server'];
+    return typeof server === 'string' ? server : null;
+  }
+
+  private clearServerErrors(): void {
+    for (const name of SERVER_FIELD_NAMES) {
+      const control = this.form.controls[name];
+      this.removeServerError(control);
+    }
+  }
+
+  private applyServerFieldErrors(failure: UiFailure): void {
+    for (const err of failure.fieldErrors) {
+      if (!err.field) {
+        continue;
+      }
+      const name = err.field as (typeof SERVER_FIELD_NAMES)[number];
+      if (!SERVER_FIELD_NAMES.includes(name)) {
+        continue;
+      }
+      const control = this.form.controls[name];
+      control.setErrors({ ...control.errors, server: err.message });
+      control.markAsTouched();
+    }
+  }
+
+  private removeServerError(control: AbstractControl): void {
+    if (!control.errors?.['server']) {
+      return;
+    }
+    const { server: _server, ...rest } = control.errors;
+    control.setErrors(Object.keys(rest).length > 0 ? rest : null);
   }
 }

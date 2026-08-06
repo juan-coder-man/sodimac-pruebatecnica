@@ -1,0 +1,88 @@
+<section
+  class="panel result-panel"
+  [class.result-ok]="isSuccessCode(response().code)"
+  [class.result-error]="!isSuccessCode(response().code)"
+  aria-live="polite">
+  <div class="result-header">
+    <span
+      class="badge"
+      [class.badge-ok]="isSuccessCode(response().code)"
+      [class.badge-error]="!isSuccessCode(response().code)">
+      {{ response().code }}
+    </span>
+    @if (isReprint(response().code, response().data?.eventType)) {
+      <span class="badge badge-warn">REIMPRESIÓN</span>
+    }
+    <h2>{{ isSuccessCode(response().code) ? 'Resultado' : 'Rechazo' }}</h2>
+  </div>
+
+  <p class="result-message">{{ displayMessage() || response().message }}</p>
+
+  @if (response().data; as data) {
+    @if (data.reason) {
+      <p class="result-reason"><strong>Motivo:</strong> {{ data.reason }}</p>
+    }
+
+    <dl class="result-meta">
+      @if (data.requestId) {
+        <div>
+          <dt>requestId</dt>
+          <dd>{{ data.requestId }}</dd>
+        </div>
+      }
+      @if (data.etqId) {
+        <div>
+          <dt>ETQ</dt>
+          <dd>{{ data.etqId }}</dd>
+        </div>
+      }
+      @if (data.lpnId) {
+        <div>
+          <dt>LPN</dt>
+          <dd>{{ data.lpnId }}</dd>
+        </div>
+      }
+      @if (data.zone) {
+        <div>
+          <dt>Zona</dt>
+          <dd>{{ data.zone }}</dd>
+        </div>
+      }
+      @if (data.eventType) {
+        <div>
+          <dt>Tipo</dt>
+          <dd>{{ data.eventType }}</dd>
+        </div>
+      }
+      @if (data.result) {
+        <div>
+          <dt>Resultado</dt>
+          <dd>{{ data.result }}</dd>
+        </div>
+      }
+      @if (data.printedAt) {
+        <div>
+          <dt>Fecha</dt>
+          <dd>{{ data.printedAt }}</dd>
+        </div>
+      }
+      @if (data.reprintReason) {
+        <div>
+          <dt>Motivo reimpresión</dt>
+          <dd>{{ data.reprintReason }}</dd>
+        </div>
+      }
+    </dl>
+
+    @if (data.zpl) {
+      <div class="zpl-block">
+        <button type="button" class="btn-secondary" (click)="onToggleZpl()">
+          {{ zplOpen() ? 'Ocultar ZPL' : 'Ver ZPL' }}
+        </button>
+        @if (zplOpen()) {
+          <pre class="payload">{{ data.zpl }}</pre>
+        }
+      </div>
+    }
+  }
+</section>

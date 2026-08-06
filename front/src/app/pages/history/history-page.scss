@@ -176,3 +176,35 @@ h2 {
   background: #fff8e1;
   color: #f57f17;
 }
+
+.seed-hint {
+  margin: 1rem 0 0;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.seed-hint code {
+  font-size: 0.8em;
+}
+
+@media (max-width: 640px) {
+  .panel {
+    padding: 1rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}
+

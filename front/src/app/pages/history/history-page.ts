@@ -3,11 +3,12 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HistoryFilters, HistoryItem, UiFailure } from '../../core/models';
 import { toUiFailure } from '../../core/utils/api-error.util';
 import { HistoryApiService } from '../../services/history-api.service';
+import { ApiFailurePanel } from '../../shared/api-failure/api-failure';
 
 @Component({
   selector: 'app-history-page',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ApiFailurePanel],
   templateUrl: './history-page.html',
   styleUrl: './history-page.scss'
 })

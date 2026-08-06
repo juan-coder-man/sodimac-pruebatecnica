@@ -61,3 +61,26 @@
   margin: 0 auto;
   padding: 1.5rem;
 }
+
+@media (max-width: 640px) {
+  .shell-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .shell-nav {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .shell-nav a {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+
+  .shell-main {
+    padding: 1rem;
+  }
+}
+

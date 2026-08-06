@@ -1,0 +1,19 @@
+<section class="panel result-panel result-error" aria-live="polite">
+  <div class="result-header">
+    <span class="badge badge-error">{{ failure().code }}</span>
+    <h2>{{ heading() }}</h2>
+  </div>
+  <p class="result-message">{{ failure().message }}</p>
+  @if (failure().fieldErrors.length > 0) {
+    <ul class="field-errors">
+      @for (err of failure().fieldErrors; track err.field + err.code) {
+        <li>
+          @if (err.field) {
+            <strong>{{ err.field }}:</strong>
+          }
+          {{ err.message }}
+        </li>
+      }
+    </ul>
+  }
+</section>
