@@ -19,7 +19,13 @@ npm install
 npm start
 ```
 
-Abre [http://localhost:4200](http://localhost:4200). La ruta `/print` incluye un botón para verificar `GET /api/v1/health`.
+Abre [http://localhost:4200](http://localhost:4200).
+
+| Ruta | Descripción |
+|------|-------------|
+| `/print` | Consulta LPN + impresión |
+| `/history` | Historial de impresiones |
+| `/` | Redirect a `/print` |
 
 Backend:
 
@@ -38,11 +44,10 @@ apiUrl: 'http://localhost:8080/api/v1'
 
 CORS del back debe permitir `http://localhost:4200`.
 
-## Rutas (Fase 0)
+## Pruebas
 
-| Ruta | Descripción |
-|------|-------------|
-| `/print` | Placeholder + check de health |
-| `/` | Redirect a `/print` |
+```bash
+npm test -- --watch=false
+```
 
-Formulario de impresión e historial: fases siguientes.
+Detalle de cobertura y criterios: [`docs/PRUEBAS.md`](docs/PRUEBAS.md).
