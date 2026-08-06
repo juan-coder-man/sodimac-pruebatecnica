@@ -101,11 +101,11 @@
 
     <p class="result-message">{{ displayMessage() || response.message }}</p>
 
-    @if (response.data?.reason) {
-      <p class="result-reason"><strong>Motivo:</strong> {{ response.data?.reason }}</p>
-    }
-
     @if (response.data; as data) {
+      @if (data.reason) {
+        <p class="result-reason"><strong>Motivo:</strong> {{ data.reason }}</p>
+      }
+
       <dl class="result-meta">
         @if (data.requestId) {
           <div>
