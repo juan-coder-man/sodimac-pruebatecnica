@@ -14,6 +14,38 @@ java -version
 mvn -v
 ```
 
+## Estructura del proyecto
+
+```
+back-java/
+├── src/main/java/co/homecenter/etq/
+│   ├── api/                 # Controllers, DTOs, excepciones
+│   ├── application/         # Services, mappers
+│   ├── domain/              # Modelos, reglas, puertos
+│   └── infrastructure/      # Mocks, auditoría memoria, config
+├── src/main/resources/
+│   └── mocks/               # orders.json, inventory.json
+├── src/test/java/           # Unit, WebMvcTest, integración
+├── docs/                    # API, arquitectura C4, supuestos, soporte, pruebas
+└── postman/                 # Colección Postman
+```
+
+
+
+## Documentación
+
+
+| Documento                                                | Contenido                                                             |
+| -------------------------------------------------------- | --------------------------------------------------------------------- |
+| [docs/API.md](docs/API.md)                               | Contratos HTTP, códigos, ejemplos                                     |
+| [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md)             | Capas, SOLID, flujo y **C4** (Context / Container / Component)        |
+| [docs/SUPUESTOS.md](docs/SUPUESTOS.md)                   | Decisiones de diseño y fuera de alcance                               |
+| [docs/SOPORTE_PRODUCTIVO.md](docs/SOPORTE_PRODUCTIVO.md) | Respuesta al escenario productivo (diagnóstico, comunicación, cierre) |
+| [docs/PRUEBAS.md](docs/PRUEBAS.md)                       | Cómo ejecutar tests y cobertura de reglas                             |
+
+
+
+
 ## Ejecución local
 
 ```bash
@@ -57,13 +89,15 @@ curl -s -X POST http://localhost:8080/api/v1/print \
 
 Casos semilla:
 
-| LPN | Zona | Resultado esperado |
-|-----|------|--------------------|
-| `LPN-000987654` | `ZONA-PICKING-A` | `PRINT_OK` / reimpresión `REPRINT_OK` al repetir |
-| `LPN-ANULADA-001` | `ZONA-PICKING-A` | `DOCUMENT_INVALID_STATUS` |
-| `LPN-DEVUELTA-001` | `ZONA-PICKING-B` | `DOCUMENT_INVALID_STATUS` |
-| `LPN-SIN-STOCK-001` | `ZONA-PICKING-C` | inventario / no abastecido |
-| `LPN-NO-EXISTE` | cualquier | `LPN_NOT_FOUND` |
+
+| LPN                 | Zona             | Resultado esperado                               |
+| ------------------- | ---------------- | ------------------------------------------------ |
+| `LPN-000987654`     | `ZONA-PICKING-A` | `PRINT_OK` / reimpresión `REPRINT_OK` al repetir |
+| `LPN-ANULADA-001`   | `ZONA-PICKING-A` | `DOCUMENT_INVALID_STATUS`                        |
+| `LPN-DEVUELTA-001`  | `ZONA-PICKING-B` | `DOCUMENT_INVALID_STATUS`                        |
+| `LPN-SIN-STOCK-001` | `ZONA-PICKING-C` | inventario / no abastecido                       |
+| `LPN-NO-EXISTE`     | cualquier        | `LPN_NOT_FOUND`                                  |
+
 
 Los rechazos de negocio responden HTTP 200 con `success: false`. Campos obligatorios faltantes → HTTP 400.
 
@@ -91,7 +125,7 @@ Documenta Health, ETQ, Print e History con los códigos HTTP del contrato.
 
 Importar la colección:
 
-[`postman/etq-print.postman_collection.json`](postman/etq-print.postman_collection.json)
+`[postman/etq-print.postman_collection.json](postman/etq-print.postman_collection.json)`
 
 Variable `baseUrl` por defecto: `http://localhost:8080`.
 
@@ -107,4 +141,3 @@ mvn test
 Incluye unitarios (reglas y mapper), `@WebMvcTest` de controllers y un flujo de integración contra los mocks JSON.
 
 Detalle: [docs/PRUEBAS.md](docs/PRUEBAS.md).
-
