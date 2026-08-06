@@ -4,6 +4,9 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 import co.homecenter.etq.api.dto.request.PrintRequest;
@@ -22,6 +25,8 @@ import co.homecenter.etq.domain.rule.ValidationOutcome;
 
 @Service
 public class PrintServiceImpl implements PrintService {
+
+    private static final Logger log = LoggerFactory.getLogger(PrintServiceImpl.class);
 
     private final OrderRepository orderRepository;
     private final PrintValidationService printValidationService;
@@ -45,83 +50,102 @@ public class PrintServiceImpl implements PrintService {
 
         String requestId = "REQ-PRINT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         Instant printedAt = Instant.now();
+        MDC.put("requestId", requestId);
 
-        Optional<Order> orderOpt = orderRepository.findByLpn(lpn);
-        if (orderOpt.isEmpty()) {
-            PrintResponseData data = buildAndSaveRejected(
+        try {
+            log.info("Inicio impresion lpn={} zone={}", lpn, zone);
+
+            Optional<Order> orderOpt = orderRepository.findByLpn(lpn);
+            if (orderOpt.isEmpty()) {
+                PrintResponseData data = buildAndSaveRejected(
+                        requestId,
+                        null,
+                        lpn,
+                        zone,
+                        requestedBy,
+                        printedAt,
+                        "LPN no encontrado en los datos mock",
+                        reprintReason,
+                        null);
+                log.info("Impresion rechazada requestId={} code=LPN_NOT_FOUND result=RECHAZADO", requestId);
+                return ApiResponse.failure(
+                        "LPN_NOT_FOUND",
+                        "No se encontro ETQ para el LPN indicado",
+                        data);
+            }
+
+            Order order = orderOpt.get();
+            Optional<Label> labelOpt = findLabel(order, lpn);
+            if (labelOpt.isEmpty()) {
+                PrintResponseData data = buildAndSaveRejected(
+                        requestId,
+                        null,
+                        lpn,
+                        zone,
+                        requestedBy,
+                        printedAt,
+                        "LPN sin etiqueta asociada",
+                        reprintReason,
+                        null);
+                log.info("Impresion rechazada requestId={} code=LPN_NOT_FOUND result=RECHAZADO", requestId);
+                return ApiResponse.failure(
+                        "LPN_NOT_FOUND",
+                        "No se encontro ETQ para el LPN indicado",
+                        data);
+            }
+
+            Label label = labelOpt.get();
+            ValidationOutcome outcome = printValidationService.validate(order, zone, lpn);
+
+            if (!outcome.isAllowed()) {
+                PrintResponseData data = buildAndSaveRejected(
+                        requestId,
+                        label.getEtqId(),
+                        lpn,
+                        zone,
+                        requestedBy,
+                        printedAt,
+                        outcome.getReason(),
+                        reprintReason,
+                        null);
+                log.info(
+                        "Impresion rechazada requestId={} code={} result=RECHAZADO",
+                        requestId,
+                        outcome.getCode());
+                return ApiResponse.failure(outcome.getCode(), outcome.getReason(), data);
+            }
+
+            EventType eventType = outcome.isReprint() ? EventType.REIMPRESION : EventType.IMPRESION;
+            PrintAudit audit = new PrintAudit();
+            audit.setId(UUID.randomUUID().toString());
+            audit.setRequestId(requestId);
+            audit.setEtqId(label.getEtqId());
+            audit.setLpnId(lpn);
+            audit.setZone(zone);
+            audit.setRequestedBy(requestedBy);
+            audit.setPrintedAt(printedAt);
+            audit.setResult(PrintResult.EXITOSO);
+            audit.setEventType(eventType);
+            audit.setReason(null);
+            audit.setReprintReason(outcome.isReprint() ? reprintReason : null);
+            audit.setZpl(label.getZpl());
+            printAuditRepository.save(audit);
+
+            PrintResponseData data = toResponseData(audit);
+            String code = outcome.isReprint() ? "REPRINT_OK" : "PRINT_OK";
+            String message = outcome.isReprint()
+                    ? "Reimpresion de ETQ exitosa"
+                    : "Impresion de ETQ exitosa";
+            log.info(
+                    "Impresion exitosa requestId={} code={} eventType={} zplPresent={}",
                     requestId,
-                    null,
-                    lpn,
-                    zone,
-                    requestedBy,
-                    printedAt,
-                    "LPN no encontrado en los datos mock",
-                    reprintReason,
-                    null);
-            return ApiResponse.failure(
-                    "LPN_NOT_FOUND",
-                    "No se encontro ETQ para el LPN indicado",
-                    data);
+                    code,
+                    eventType,
+                    label.getZpl() != null);
+            return ApiResponse.success(code, message, data);
+        } finally {
+            MDC.clear();
         }
-
-        Order order = orderOpt.get();
-        Optional<Label> labelOpt = findLabel(order, lpn);
-        if (labelOpt.isEmpty()) {
-            PrintResponseData data = buildAndSaveRejected(
-                    requestId,
-                    null,
-                    lpn,
-                    zone,
-                    requestedBy,
-                    printedAt,
-                    "LPN sin etiqueta asociada",
-                    reprintReason,
-                    null);
-            return ApiResponse.failure(
-                    "LPN_NOT_FOUND",
-                    "No se encontro ETQ para el LPN indicado",
-                    data);
-        }
-
-        Label label = labelOpt.get();
-        ValidationOutcome outcome = printValidationService.validate(order, zone, lpn);
-
-        if (!outcome.isAllowed()) {
-            PrintResponseData data = buildAndSaveRejected(
-                    requestId,
-                    label.getEtqId(),
-                    lpn,
-                    zone,
-                    requestedBy,
-                    printedAt,
-                    outcome.getReason(),
-                    reprintReason,
-                    null);
-            return ApiResponse.failure(outcome.getCode(), outcome.getReason(), data);
-        }
-
-        EventType eventType = outcome.isReprint() ? EventType.REIMPRESION : EventType.IMPRESION;
-        PrintAudit audit = new PrintAudit();
-        audit.setId(UUID.randomUUID().toString());
-        audit.setRequestId(requestId);
-        audit.setEtqId(label.getEtqId());
-        audit.setLpnId(lpn);
-        audit.setZone(zone);
-        audit.setRequestedBy(requestedBy);
-        audit.setPrintedAt(printedAt);
-        audit.setResult(PrintResult.EXITOSO);
-        audit.setEventType(eventType);
-        audit.setReason(null);
-        audit.setReprintReason(outcome.isReprint() ? reprintReason : null);
-        audit.setZpl(label.getZpl());
-        printAuditRepository.save(audit);
-
-        PrintResponseData data = toResponseData(audit);
-        String code = outcome.isReprint() ? "REPRINT_OK" : "PRINT_OK";
-        String message = outcome.isReprint()
-                ? "Reimpresion de ETQ exitosa"
-                : "Impresion de ETQ exitosa";
-        return ApiResponse.success(code, message, data);
     }
 
     private PrintResponseData buildAndSaveRejected(

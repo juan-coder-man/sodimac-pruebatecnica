@@ -1,0 +1,144 @@
+{
+  "info": {
+    "name": "ETQ Print API",
+    "description": "Coleccion para probar el submodulo de impresion de ETQ",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/v1/health"
+      }
+    },
+    {
+      "name": "Consulta OK",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"request\": {\n    \"lpn\": \"LPN-000987654\"\n  }\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/etq/consulta"
+      }
+    },
+    {
+      "name": "Consulta 404",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"request\": {\n    \"lpn\": \"LPN-NO-EXISTE\"\n  }\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/etq/consulta"
+      }
+    },
+    {
+      "name": "Print OK",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"lpn\": \"LPN-000987654\",\n  \"zone\": \"ZONA-PICKING-A\",\n  \"requestedBy\": \"usuario.operacion\",\n  \"reprintReason\": null\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/print"
+      }
+    },
+    {
+      "name": "Print anulado",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"lpn\": \"LPN-ANULADA-001\",\n  \"zone\": \"ZONA-PICKING-A\",\n  \"requestedBy\": \"usuario.operacion\"\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/print"
+      }
+    },
+    {
+      "name": "Print sin stock",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"lpn\": \"LPN-SIN-STOCK-001\",\n  \"zone\": \"ZONA-PICKING-C\",\n  \"requestedBy\": \"usuario.operacion\"\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/print"
+      }
+    },
+    {
+      "name": "Reprint",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"lpn\": \"LPN-000987654\",\n  \"zone\": \"ZONA-PICKING-A\",\n  \"requestedBy\": \"usuario.operacion\",\n  \"reprintReason\": \"Etiqueta danada\"\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/print",
+        "description": "Ejecutar despues de Print OK en la misma sesion del servidor"
+      }
+    },
+    {
+      "name": "History",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/print/history?lpn=LPN-000987654",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "print", "history"],
+          "query": [
+            {
+              "key": "lpn",
+              "value": "LPN-000987654"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

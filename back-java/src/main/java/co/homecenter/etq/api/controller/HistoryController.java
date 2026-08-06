@@ -13,9 +13,13 @@ import co.homecenter.etq.api.dto.response.ApiResponse;
 import co.homecenter.etq.api.dto.response.HistoryItemResponse;
 import co.homecenter.etq.application.service.HistoryService;
 import co.homecenter.etq.domain.enums.PrintResult;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/print")
+@Tag(name = "History", description = "Historial de impresiones")
 public class HistoryController {
 
     private final HistoryService historyService;
@@ -25,6 +29,13 @@ public class HistoryController {
     }
 
     @GetMapping("/history")
+    @Operation(summary = "Consultar historial de impresiones")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200", description = "Historial consultado"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "400", description = "Parametro result invalido")
+    })
     public ResponseEntity<ApiResponse<List<HistoryItemResponse>>> history(
             @RequestParam(required = false) String lpn,
             @RequestParam(required = false) String zone,

@@ -2,6 +2,8 @@ package co.homecenter.etq.domain.rule;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import co.homecenter.etq.domain.enums.DocumentStatus;
@@ -13,6 +15,8 @@ import co.homecenter.etq.domain.repository.PrintAuditRepository;
 
 @Component
 public class PrintValidationService {
+
+    private static final Logger log = LoggerFactory.getLogger(PrintValidationService.class);
 
     private final InventoryRepository inventoryRepository;
     private final PrintAuditRepository printAuditRepository;
@@ -27,6 +31,7 @@ public class PrintValidationService {
     public ValidationOutcome validate(Order order, String zone, String lpn) {
         DocumentStatus status = order.getDocument() != null ? order.getDocument().getStatus() : null;
         if (status == DocumentStatus.ANULADA || status == DocumentStatus.DEVUELTA) {
+            log.info("Validacion rechazo code=DOCUMENT_INVALID_STATUS status={}", status);
             return ValidationOutcome.rejected(
                     "DOCUMENT_INVALID_STATUS",
                     "El documento origen esta en estado " + status.name() + " y no permite impresion");
@@ -38,6 +43,10 @@ public class PrintValidationService {
                         inventoryRepository.findByZoneAndProduct(zone, product.getProductCode());
 
                 if (inventory.isEmpty()) {
+                    log.info(
+                            "Validacion rechazo code=PRODUCT_NOT_SUPPLIED product={} zone={}",
+                            product.getProductCode(),
+                            zone);
                     return ValidationOutcome.rejected(
                             "PRODUCT_NOT_SUPPLIED",
                             "El producto " + product.getProductCode()
@@ -46,6 +55,10 @@ public class PrintValidationService {
 
                 InventoryItem item = inventory.get();
                 if (!item.isSupplied()) {
+                    log.info(
+                            "Validacion rechazo code=PRODUCT_NOT_SUPPLIED product={} zone={}",
+                            product.getProductCode(),
+                            zone);
                     return ValidationOutcome.rejected(
                             "PRODUCT_NOT_SUPPLIED",
                             "El producto " + product.getProductCode()
@@ -53,6 +66,10 @@ public class PrintValidationService {
                 }
 
                 if (item.getAvailableQty() < product.getRequestedQty()) {
+                    log.info(
+                            "Validacion rechazo code=INSUFFICIENT_INVENTORY product={} zone={}",
+                            product.getProductCode(),
+                            zone);
                     return ValidationOutcome.rejected(
                             "INSUFFICIENT_INVENTORY",
                             "Inventario insuficiente para el producto " + product.getProductCode()
@@ -64,6 +81,7 @@ public class PrintValidationService {
         }
 
         boolean reprint = printAuditRepository.existsSuccessfulByLpn(lpn);
+        log.info("Validacion OK lpn={} reprint={}", lpn, reprint);
         return ValidationOutcome.ok(reprint);
     }
 }

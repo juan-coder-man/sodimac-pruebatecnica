@@ -84,3 +84,16 @@ CORS habilitado para `http://localhost:4200` (Angular local).
 ## Swagger UI
 
 Tras arrancar: `http://localhost:8080/swagger-ui.html`
+
+Documenta Health, ETQ, Print e History con los códigos HTTP del contrato.
+
+## Postman
+
+Importar la colección:
+
+[`postman/etq-print.postman_collection.json`](postman/etq-print.postman_collection.json)
+
+Variable `baseUrl` por defecto: `http://localhost:8080`.
+
+Incluye: health, consulta OK/404, print OK/anulado/sin stock, reprint e historial.
+

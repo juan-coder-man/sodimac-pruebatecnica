@@ -4,6 +4,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import co.homecenter.etq.api.dto.response.HistoryItemResponse;
@@ -15,6 +17,8 @@ import co.homecenter.etq.domain.repository.PrintAuditRepository;
 @Service
 public class HistoryServiceImpl implements HistoryService {
 
+    private static final Logger log = LoggerFactory.getLogger(HistoryServiceImpl.class);
+
     private final PrintAuditRepository printAuditRepository;
 
     public HistoryServiceImpl(PrintAuditRepository printAuditRepository) {
@@ -23,7 +27,8 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public List<HistoryItemResponse> listar(String lpn, String zone, PrintResult result) {
-        return printAuditRepository.findAll().stream()
+        log.info("Consulta historial filtros lpn={} zone={} result={}", lpn, zone, result);
+        List<HistoryItemResponse> items = printAuditRepository.findAll().stream()
                 .filter(audit -> matchesLpn(audit, lpn))
                 .filter(audit -> matchesZone(audit, zone))
                 .filter(audit -> matchesResult(audit, result))
@@ -32,6 +37,8 @@ public class HistoryServiceImpl implements HistoryService {
                         Comparator.nullsLast(Comparator.reverseOrder())))
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+        log.info("Historial retornado count={}", items.size());
+        return items;
     }
 
     private boolean matchesLpn(PrintAudit audit, String lpn) {
