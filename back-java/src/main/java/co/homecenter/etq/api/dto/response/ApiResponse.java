@@ -30,6 +30,10 @@ public class ApiResponse<T> {
         return new ApiResponse<>(false, code, message, null, Collections.emptyList());
     }
 
+    public static <T> ApiResponse<T> failure(String code, String message, T data) {
+        return new ApiResponse<>(false, code, message, data, Collections.emptyList());
+    }
+
     public boolean isSuccess() {
         return success;
     }
