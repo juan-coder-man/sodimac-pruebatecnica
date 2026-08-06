@@ -48,6 +48,9 @@ CORS está habilitado en el back para `http://localhost:4200`.
 | [back-java/README.md](back-java/README.md) | Cómo correr el API y estructura |
 | [back-java/docs/API.md](back-java/docs/API.md) | Contratos HTTP y códigos |
 | [back-java/docs/ARQUITECTURA.md](back-java/docs/ARQUITECTURA.md) | Capas y C4 del back |
+| [back-java/docs/SUPUESTOS.md](back-java/docs/SUPUESTOS.md) | Decisiones de diseño y fuera de alcance |
+| [back-java/docs/SOPORTE_PRODUCTIVO.md](back-java/docs/SOPORTE_PRODUCTIVO.md) | Escenario productivo (diagnóstico, comunicación, cierre) |
+| [back-java/docs/PRUEBAS.md](back-java/docs/PRUEBAS.md) | Tests del backend |
 | [front/README.md](front/README.md) | Cómo correr la UI |
 | [front/docs/ARQUITECTURA.md](front/docs/ARQUITECTURA.md) | Capas FE y flujo UI→API |
 | [front/docs/PRUEBAS.md](front/docs/PRUEBAS.md) | Tests del frontend |
