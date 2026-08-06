@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: etq-print
+
+etq:
+  mocks:
+    orders-path: classpath:mocks/orders.json
+    inventory-path: classpath:mocks/inventory.json
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
