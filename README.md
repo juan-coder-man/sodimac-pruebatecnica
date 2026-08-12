@@ -2,7 +2,21 @@
 
 Prueba técnica GTL Tienda (Sodimac): solución fullstack desacoplada para consultar ETQ/LPN, validar reglas de negocio, simular impresión/reimpresión y consultar historial.
 
-## Levantar en local
+## Levantar con Docker (recomendado)
+
+```bash
+docker compose up --build
+```
+
+| Servicio | URL |
+|----------|-----|
+| UI | [http://localhost:4200](http://localhost:4200) |
+| API / Health | [http://localhost:8080/api/v1/health](http://localhost:8080/api/v1/health) |
+| Swagger | [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) |
+
+El front (nginx) hace proxy de `/api` al backend; no hace falta configurar CORS para la UI en Docker.
+
+## Levantar en local (sin Docker)
 
 ### 1. Backend (puerto 8080)
 
@@ -24,7 +38,7 @@ npm start
 
 UI: [http://localhost:4200](http://localhost:4200)
 
-CORS está habilitado en el back para `http://localhost:4200`.
+`ng serve` usa proxy de `/api` → `http://localhost:8080` ([`front/proxy.conf.json`](front/proxy.conf.json)).
 
 ## Módulos
 

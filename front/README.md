@@ -13,6 +13,18 @@ Proyecto limpio (`ng new`), sin plantilla Hub.
 
 ## Ejecución
 
+### Docker (recomendado)
+
+Desde la raíz del repo:
+
+```bash
+docker compose up --build
+```
+
+UI: [http://localhost:4200](http://localhost:4200)
+
+### Local (sin Docker)
+
 ```bash
 cd front
 npm install
@@ -41,10 +53,10 @@ Swagger del API: [http://localhost:8080/swagger-ui.html](http://localhost:8080/s
 [`src/environments/environment.ts`](src/environments/environment.ts):
 
 ```ts
-apiUrl: 'http://localhost:8080/api/v1'
+apiUrl: '/api/v1'
 ```
 
-CORS del back debe permitir `http://localhost:4200`.
+En local, `ng serve` proxifica `/api` → `http://localhost:8080` ([`proxy.conf.json`](proxy.conf.json)). En Docker, nginx hace el mismo proxy hacia el servicio `backend`.
 
 ## Estructura
 

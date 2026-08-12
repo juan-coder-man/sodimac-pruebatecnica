@@ -55,6 +55,16 @@ mvn spring-boot:run
 
 La aplicación queda en `http://localhost:8080`.
 
+## Docker
+
+Desde la raíz del repo:
+
+```bash
+docker compose up --build
+```
+
+API: [http://localhost:8080](http://localhost:8080) · Swagger: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
 ## Health check
 
 ```bash
